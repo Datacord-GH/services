@@ -1,4 +1,4 @@
-name: Publish Docker image
+name: PPublish docker image for Desktop Build Tracker
 
 on:
   push:
