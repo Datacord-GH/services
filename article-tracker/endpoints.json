@@ -1,0 +1,18 @@
+[
+	{
+		"url": "https://support.discord.com",
+		"name": "support"
+	},
+	{
+		"url": "https://support-dev.discord.com",
+		"name": "dev"
+	},
+	{
+		"url": "https://discordmoderatoracademy.zendesk.com",
+		"name": "discordmoderatoracademy"
+	},
+	{
+		"url": "https://creator-support.discord.com",
+		"name": "creator-support"
+	}
+]

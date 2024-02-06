@@ -1,0 +1,98 @@
+version: "3"
+services:
+  article-tracker:
+    image: y3ll0w/datacord-article-tracker:latest
+    environment:
+      HC_ARTICLES_WEBHOOK_URL: "DISCORD_WEBHOOK_URL"
+      DEV_HC_ARTICLES_WEBHOOK_URL: "DISCORD_WEBHOOK_URL"
+      DMA_ARTICLES_WEBHOOK_URL: "DISCORD_WEBHOOK_URL"
+      SAFETY_ARTICLES_WEBHOOK_URL: "DISCORD_WEBHOOK_URL"
+      CREATOR_ARTICLES_WEBHOOK_URL: "DISCORD_WEBHOOK_URL"
+      HC_ARTICLES_ROLE_ID: "DISCORD_ROLE_ID"
+      DEV_HC_ARTICLES_ROLE_ID: "DISCORD_ROLE_ID"
+      DMA_ARTICLES_ROLE_ID: "DISCORD_ROLE_ID"
+      SAFETY_ARTICLES_ROLE_ID: "DISCORD_ROLE_ID"
+      CREATOR_ARTICLES_ROLE_ID: "DISCORD_ROLE_ID"
+      DB_URL: "/article-tracker/db/articles.db"
+    volumes:
+      - type: volume
+        source: datacord-article-tracker
+        target: /article-tracker/db
+  
+  asset-tracker:
+    image: y3ll0w/datacord-asset-tracker:latest
+    environment:
+      WEBHOOK_URL: "DISCORD_WEBHOOK_URL"
+      ROLE_ID: "DISCORD_ROLE_ID"
+      DRY_RUN: "false"
+      DB_URL: "sqlite://db/assets.db"
+    volumes:
+      - type: volume
+        source: datacord-asset-tracker
+        target: /asset-tracker/db
+
+  changelog-tracker:
+    image: y3ll0w/datacord-changelog-tracker:latest
+    environment:
+      CHANGELOG_WEBHOOK_URL: "DISCORD_WEBHOOK_URL"
+      ROLE_ID: "DISCORD_ROLE_ID"
+      DB_URL: "/changelog-tracker/db/changelogs.db"
+    volumes:
+      - type: volume
+        source: datacord-changelog-tracker
+        target: /changelog-tracker/db
+
+  desktop-build-tracker:
+    image: y3ll0w/datacord-desktop-build-tracker:latest
+    environment:
+      DESKTOP_BUILD_WEBHOOK_URL: "DISCORD_WEBHOOK_URL"
+      CANARY_ROLE_ID: "DISCORD_ROLE_ID"
+      PTB_ROLE_ID: "DISCORD_ROLE_ID"
+      STABLE_ROLE_ID: "DISCORD_ROLE_ID"
+      DB_URL: "/desktop-build-tracker/db/desktop-build.db"
+    volumes:
+      - type: volume
+        source: datacord-desktop-build-tracker
+        target: /desktop-build-tracker/db
+
+  hackerone-tracker:
+    image: y3ll0w/datacord-hackerone-tracker:latest
+    environment:
+      HACKERONE_WEBHOOK_URL: "DISCORD_WEBHOOK_URL"
+      ROLE_ID: "DISCORD_ROLE_ID"
+      DB_URL: "sqlite://db/hackerone.db"
+    volumes:
+      - type: volume
+        source: datacord-hackerone-tracker
+        target: /hackerone-tracker/db
+
+  job-tracker:
+    image: y3ll0w/datacord-job-tracker:latest
+    environment:
+      WEBHOOK_URL: "DISCORD_WEBHOOK_URL"
+      ROLE_ID: "DISCORD_ROLE_ID"
+      DB_URL: "/job-tracker/db/job.db"
+    volumes:
+      - type: volume
+        source: datacord-job-tracker
+        target: /job-tracker/db
+
+  store-tracker:
+    image: y3ll0w/datacord-store-tracker:latest
+    environment:
+      WEBHOOK_URL: "DISCORD_WEBHOOK_URL"
+      ROLE_ID: "DISCORD_ROLE_ID"
+      DB_URL: "/store-tracker/db/store.db"
+    volumes:
+      - type: volume
+        source: datacord-store-tracker
+        target: /store-tracker/db
+
+volumes:
+  datacord-article-tracker:
+  datacord-asset-tracker:
+  datacord-changelog-tracker:
+  datacord-desktop-build-tracker:
+  datacord-hackerone-tracker:
+  datacord-job-tracker:
+  datacord-store-tracker:
