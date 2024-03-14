@@ -17,7 +17,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         (),
     )?;
 
-    let js_files = Regex::new(r"/assets/([a-zA-z0-9]+).js").unwrap();
+    let js_files = Regex::new(r"/assets/([\.a-zA-z0-9]+).js").unwrap();
     let build_number_rg =
         Regex::new(r#"Build Number: "\).concat\("(?P<version>[0-9]+)"+"#).unwrap();
     let build_hash_rg =
