@@ -8,9 +8,11 @@ edition = "2021"
 reqwest = { version = "0.11", features = ["json"] }
 tokio = { version = "1", features = ["full"] }
 regex = "1.6.0"
-rusqlite = { version = "0.28.0", features = ["bundled"] }
-serenity = {version = "0.11.5", features= ["http", "model"]}
+rusqlite = { version = "0.30.0", features = ["bundled"] }
+rusqlite_migration = "1.1.0"
+serenity = { version = "0.11.5", features = ["http", "model"] }
 dotenv = "0.15.0"
+chrono = "0.4.35"
 
 [target.'cfg(unix)'.dependencies]
 openssl = { version = "0.10", features = ["vendored"] }

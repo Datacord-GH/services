@@ -1,21 +1,20 @@
+mod database;
 mod models;
 mod utils;
 
+use database::Database;
 use dotenv::dotenv;
 use regex::Regex;
-use rusqlite::{Connection, Result};
-use std::{collections::HashMap, env};
+use rusqlite::Result;
+use std::collections::HashMap;
+
+use crate::models::Build;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok();
 
-    let conn = Connection::open(env::var("DB_URL").expect("missing DB_URL in .env"))?;
-
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS builds (id INTEGER PRIMARY KEY, channel TEXT, build_number TEXT, build_hash TEXT, build_id TEXT)",
-        (),
-    )?;
+    let db = Database::init().expect("failed to create database");
 
     let js_files = Regex::new(r"/assets/([\.a-zA-z0-9]+).js").unwrap();
     let build_number_rg =
@@ -40,22 +39,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             None => panic!("x-build-id is missing from headers"),
         };
 
-        let sql_select = format!(
-            "SELECT * FROM builds WHERE build_id = '{}' AND channel = '{}'",
-            build_id, release_channel
-        );
-        let mut stmt = conn.prepare(&sql_select)?;
-        let build = stmt.query_map([], |row| {
-            Ok(models::Build {
-                id: row.get(0)?,
-                channel: row.get(1)?,
-                build_number: row.get(2)?,
-                build_hash: row.get(3)?,
-                build_id: row.get(4)?,
-            })
-        })?;
+        let build_count = db
+            .get_build_count(build_id, release_channel)
+            .expect("failed to get builds");
 
-        if build.count() > 0 {
+        if build_count > 0 {
             println!("[!] {} is still on build {}", release_channel, build_id);
             continue;
         }
@@ -91,29 +79,28 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             continue;
         }
 
-        let current = models::Build {
+        let current = models::BuildDatabase {
             id: 0,
             channel: release_channel.to_string(),
             build_number: build_number.to_string(),
             build_hash: build_hash.to_string(),
             build_id: build_id.to_string(),
+            date: Some(chrono::offset::Utc::now().to_string()),
         };
-        conn.execute(
-            "INSERT INTO builds (channel, build_number, build_hash, build_id) VALUES (?1, ?2, ?3, ?4)",
-            (
-                &current.channel,
-                &current.build_number,
-                &current.build_hash,
-                &current.build_id,
-            ),
-        )?;
 
-        utils::send_message(&current).await?;
+        let builds_today = db.get_amount_of_builds_today(&release_channel)?;
+        let is_revert_build = db.is_build_revert(&current.build_number, &release_channel)?;
+
+        db.insert_build(&current);
+
+        let build = Build::convert_from_database(current, builds_today, is_revert_build);
+
+        utils::send_message(&build).await?;
 
         println!("---------{}---------", release_channel);
-        println!("Build Number: {}", build_number);
-        println!("Build Id: {}", &build_id[..7]);
-        println!("Build Hash: {}", build_hash);
+        println!("Build Number: {}", build.build_number);
+        println!("Build Id: {}", build.build_id);
+        println!("Build Hash: {}", build.build_hash);
     }
 
     Ok(())
