@@ -59,7 +59,7 @@ impl Database {
             })
         })?;
 
-        Ok(db_build.count() + 1)
+        Ok(db_build.count())
     }
 
     pub fn get_amount_of_builds_today(

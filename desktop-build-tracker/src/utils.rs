@@ -44,7 +44,7 @@ pub async fn send_message(build: &Build) -> Result<(), SerenityError> {
             .field("Reverted build", emoji_format(&build.is_revert), true)
             .field(
                 "Builds today",
-                format!("`{}`", build.amount_of_builds_today),
+                format!("`{}`", build.amount_of_builds_today + 1),
                 true,
             )
     });
