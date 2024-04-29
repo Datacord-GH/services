@@ -1,0 +1,110 @@
+[
+  {
+    "url": "https://dis.gd",
+    "description": "URL shortener"
+  },
+  {
+    "url": "https://discord.com",
+    "description": "Primary url"
+  },
+  {
+    "url": "https://discord.design",
+    "description": "Discords dribble link"
+  },
+  {
+    "url": "https://discord.dev",
+    "description": "Developers site"
+  },
+  {
+    "url": "https://discord.gg",
+    "description": "Invite shortlinks, Gateway host"
+  },
+  {
+    "url": "https://discord.gift",
+    "description": "Gift shortlinks"
+  },
+  {
+    "url": "https://discord.gifts",
+    "description": "Another gift shortlinks"
+  },
+  {
+    "url": "https://discord.media",
+    "description": "Voice servers"
+  },
+  {
+    "url": "https://discord.new",
+    "description": "Template shortlinks"
+  },
+  {
+    "url": "https://discord.store",
+    "description": "Merch store"
+  },
+  {
+    "url": "https://discordapp.com",
+    "description": "Old app, marketing website, and API; CDN"
+  },
+  {
+    "url": "https://discordapp.net",
+    "description": "Media Proxy, Client Downloads"
+  },
+  {
+    "url": "https://discordmerch.com",
+    "description": "Merch store"
+  },
+  {
+    "url": "https://discordstatus.com",
+    "description": "Status Page"
+  },
+  {
+    "url": "https://airhorn.solutions",
+    "description": "https://github.com/discord/airhornbot"
+  },
+  {
+    "url": "https://airhornbot.com",
+    "description": "https://github.com/discord/airhornbot"
+  },
+  {
+    "url": "https://bigbeans.solutions",
+    "description": "https://youtu.be/9Z4GW6Vd6NI"
+  },
+  {
+    "url": "https://watchanimeattheoffice.com",
+    "description": "HypeSquad form placeholder/meme"
+  },
+  {
+    "url": "https://discord.co",
+    "description": "Admin panel, internal tools"
+  },
+  {
+    "url": "https://discord.tools",
+    "description": "Internal tools "
+  },
+  {
+    "url": "https://discordpartygames.com",
+    "description": "Voice channel activity API host"
+  },
+  {
+    "url": "https://discord-activities.com",
+    "description": "Voice channel activity API host"
+  },
+  {
+    "url": "https://discordactivities.com",
+    "description": "Voice channel activity data management"
+  },
+  {
+    "url": "https://discordsays.com",
+    "description": "Voice channel activity host"
+  },
+  {
+    "url": "https://discordapp.io",
+    "description": "Unused"
+  },
+  {
+    "url": "https://discordcdn.com",
+    "description": "Unused"
+  },
+  {
+    "url": "https://discordsez.com",
+    "description": "Voice channel activity staging host"
+  }
+]

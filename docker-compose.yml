@@ -88,6 +88,18 @@ services:
         source: datacord-store-tracker
         target: /store-tracker/db
 
+  subdomain-tracker:
+    image: y3ll0w/datacord-subdomain-tracker:latest
+    environment:
+      SUBDOMAIN_WEBHOOK_URL: "DISCORD_WEBHOOK_URL"
+      ROLE_ID: "DISCORD_ROLE_ID"
+      DB_URL: "/subdomain-tracker/db/subdomains.db"
+    volumes:
+      - type: volume
+        source: datacord-subdomain-tracker
+        target: /subdomain-tracker/db
+
+
 volumes:
   datacord-article-tracker:
   datacord-asset-tracker:
@@ -96,3 +108,4 @@ volumes:
   datacord-hackerone-tracker:
   datacord-job-tracker:
   datacord-store-tracker:
+  datacord-subdomain-tracker:
