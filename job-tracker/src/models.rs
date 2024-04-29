@@ -73,5 +73,5 @@ pub struct Department {
 #[serde(rename_all = "camelCase")]
 pub struct Office {
     pub name: String,
-    pub location: String,
+    pub location: Option<String>,
 }

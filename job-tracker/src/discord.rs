@@ -20,7 +20,11 @@ pub async fn send_new_job_message(job: &Job) -> Result<(), SerenityError> {
             .title(&job.title)
             .field("Department", &job.departments.first().unwrap().name, true)
             .field("Location", &job.location.name, true)
-            .field("Office", &job.offices.first().unwrap().name, true)
+            .field(
+                "Office",
+                &job.offices.first().expect("no offices").name,
+                true,
+            )
             .field(
                 "Discord Jobs",
                 format!("[Here]({})", &job.get_discord_url()),

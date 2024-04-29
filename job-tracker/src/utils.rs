@@ -18,7 +18,7 @@ pub fn generate_greenhouse_mock() -> GreenHouseResponse {
             }],
             offices: vec![Office {
                 name: String::from("San Francisco, CA or Remote (U.S.)"),
-                location: String::from("San Francisco, CA or Remote (U.S.)"),
+                location: Some(String::from("San Francisco, CA or Remote (U.S.)")),
             }],
         }],
     }
