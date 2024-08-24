@@ -12,10 +12,10 @@ pub struct HackerOneThanksDB {
 #[derive(Debug, Clone, Deserialize)]
 pub struct HackerOneThanks {
     pub username: String,
-    pub id: String,
+    pub user_id: String,
+    pub recognized_report_count: i64,
     pub reputation: i64,
-    pub avatar_url: String,
-    pub position: usize,
+    pub profile_url: String,
 }
 
 #[allow(dead_code)]
@@ -40,15 +40,10 @@ impl HackerOneThanks {
     }
 
     pub fn get_avatar_url(&self) -> String {
-        let default_avatar = String::from("https://hackerone.com/assets/avatars/default-25f7248a18bdf9e2dc8310319b148d66cff430fa0fade6c5f25fee1b8d7f27ed.png");
-
-        if self.avatar_url.len() > 2048 {
-            return default_avatar;
-        } else if self.avatar_url.starts_with("https") {
-            return self.avatar_url.clone();
-        } else {
-            return default_avatar;
-        }
+        format!(
+            "https://hackerone-api.discord.workers.dev/user-avatars/{}",
+            self.username
+        )
     }
 
     // https://docs.hackerone.com/hackers/reputation.html#effects-of-report-state-on-reputation

@@ -36,7 +36,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     .execute(&mut conn)
     .await?;
 
-    let hackers = reqwest::get("https://h1rep.jup.workers.dev/")
+    let hackers = reqwest::get("https://hackerone-api.discord.workers.dev/thanks")
         .await?
         .json::<Vec<HackerOneThanks>>()
         .await?;
@@ -46,7 +46,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     for hacker in hackers {
         let hacker_db =
             sqlx::query_as::<_, HackerOneThanksDB>("SELECT * FROM hackers WHERE user_id = ?")
-                .bind(&hacker.id)
+                .bind(&hacker.user_id)
                 .fetch_one(&pool)
                 .await;
 
@@ -56,18 +56,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     send_updated_rep(
                         &hacker,
                         &HackerOneThanks {
-                            avatar_url: "".to_string(),
-                            id: old.user_id,
+                            profile_url: "".to_string(),
+                            user_id: old.user_id,
                             username: old.username,
                             reputation: old.reputation,
-                            position: 0,
+                            recognized_report_count: 0,
                         },
                     )
                     .await?;
 
                     sqlx::query("UPDATE hackers SET reputation = ? WHERE user_id = ?")
                         .bind(&hacker.reputation)
-                        .bind(&hacker.id)
+                        .bind(&hacker.user_id)
                         .execute(&mut conn)
                         .await?;
                 }
@@ -76,7 +76,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 send_new_user(&hacker).await?;
 
                 sqlx::query("INSERT INTO hackers (user_id, username, reputation, profile_url) VALUES (?, ?, ?, ?)")
-                    .bind(&hacker.id)
+                    .bind(&hacker.user_id)
                     .bind(&hacker.username)
                     .bind(&hacker.reputation)
                     .bind(&hacker.get_hackerone_url())

@@ -14,8 +14,8 @@ pub async fn send_new_user(hacker: &HackerOneThanks) -> Result<(), SerenityError
     let hackerone_embed = Embed::fake(|e| {
         e.colour(Colour::from_rgb(0, 0, 1))
             .description(format!(
-                "**{}** `({})` was added with **{}** reputation\n**Position:** {}\n\n**Profile:** {}",
-                hacker.username, hacker.id, hacker.reputation, hacker.position, hacker.get_hackerone_url()
+                "**{}** `({})` was added with **{}** reputation\n**Recognized Report Count:** {}\n\n**Profile:** {}",
+                hacker.username, hacker.user_id, hacker.reputation, hacker.recognized_report_count, hacker.get_hackerone_url()
             ))
             .thumbnail(&hacker.get_avatar_url())
     });
@@ -57,14 +57,14 @@ pub async fn send_updated_rep(
     let hackerone_embed = Embed::fake(|e| {
         e.colour(Colour::from_rgb(0, 0, 1))
             .description(format!(
-                "**{}** `({})` reputation {} from **{}** to **{}** `({})`\n**Position:** {}\n**Report type:** {:#?}\n\n**Profile:** {}",
+                "**{}** `({})` reputation {} from **{}** to **{}** `({})`\n**Recognized Report Count:** {}\n**Report type:** {:#?}\n\n**Profile:** {}",
                 new_hacker.username,
-                new_hacker.id,
+                new_hacker.user_id,
                 what_way,
                 old_hacker.reputation,
                 new_hacker.reputation,
                 new_hacker.reputation - old_hacker.reputation,
-                new_hacker.position,
+                new_hacker.recognized_report_count,
                 reputation_type,
                 new_hacker.get_hackerone_url()
             ))
