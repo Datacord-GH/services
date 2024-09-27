@@ -17,10 +17,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let db = Database::init().expect("failed to create database");
 
     let js_files = Regex::new(r"/assets/([\.a-zA-z0-9]+).js").unwrap();
-    let build_number_rg =
-        Regex::new(r#"Build Number: "\).concat\("(?P<version>[0-9]+)"+"#).unwrap();
-    let build_hash_rg =
-        Regex::new(r#"Version Hash: "\).concat\("(?P<hash>[A-Za-z0-9]+)"+"#).unwrap();
+    let reg =
+        Regex::new(r#"window\.GLOBAL_ENV\.RELEASE_CHANNEL\s*,\s*.\s*=\s*"(?P<version>\d+)"s*,\s*.="(?P<hash>[a-zA-Z0-9]+)""#)
+            .unwrap();
 
     let channels: HashMap<&str, &str> = HashMap::from([
         ("Stable", "https://discord.com"),
@@ -30,7 +29,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     for (release_channel, url) in channels {
         let app_url = format!("{}/app", url);
-        let resp = reqwest::get(app_url).await?;
+        let client = reqwest::ClientBuilder::new()
+            .build()
+            .expect("Failed to create client");
+
+        let resp = match client.get(app_url).send().await {
+            Ok(resp) => resp,
+            Err(err) => {
+                panic!("{:#?}", err);
+            }
+        };
+
         let headers = resp.headers().clone();
         let text = resp.text().await?;
 
@@ -55,15 +64,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .map(|mat: regex::Match<'_>| mat.as_str());
 
         for js in files {
-            let js_file_url: String = format!("{}{}", url, js);
+            let js_file_url = format!("{}{}", url, js);
             let js_file_data = reqwest::get(&js_file_url).await?.text().await?;
 
-            build_number = match &build_number_rg.captures(&js_file_data) {
-                Some(version) => version["version"].to_string(),
-                None => continue,
-            };
-            build_hash = match &build_hash_rg.captures(&js_file_data) {
-                Some(hash) => hash["hash"].to_string(),
+            (build_number, build_hash) = match &reg.captures(&js_file_data) {
+                Some(captures) => (
+                    captures["version"].to_string(),
+                    captures["hash"].to_string(),
+                ),
                 None => continue,
             };
 
@@ -88,8 +96,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             date: Some(chrono::offset::Utc::now().to_string()),
         };
 
-        let builds_today = db.get_amount_of_builds_today(&release_channel)?;
-        let is_revert_build = db.is_build_revert(&current.build_number, &release_channel)?;
+        let builds_today = db.get_amount_of_builds_today(release_channel)?;
+        let is_revert_build = db.is_build_revert(&current.build_number, release_channel)?;
 
         db.insert_build(&current);
 
